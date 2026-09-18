@@ -1,0 +1,46 @@
+======================================================================
+SETUBID TENDER DEDUPLICATION: SECTION C TERMINAL LOG
+SECTION A, PART C: MAKE RETRIEVAL SUBLINEAR, AND PRICE THE RISK
+======================================================================
+[1] SUBLINEAR RETRIEVAL VIA LOCALITY SENSITIVE HASHING (LSH):
+  - Total signature size: K = 128 hash values.
+  - Partitioning: b bands of r rows each (b * r = 128).
+  - Probability of pair with true similarity s surviving to candidate stage:
+      P(candidate | s) = 1 - (1 - s^r)^b
+  - Theoretical threshold: t ~= (1/b)^(1/r)
+
+[2] CHARACTERISTIC S-CURVE COMPARISON ACROSS CANDIDATE CONFIGURATIONS:
+  ----------------------------------------------------------------------------------
+  True Similarity s | b=16, r=8 (t ~= 0.71) | b=32, r=4 (t ~= 0.42) [CHOSEN] | b=64, r=2 (t ~= 0.12)
+  ----------------------------------------------------------------------------------
+        0.10        |        0.0000         |             0.0032             |        0.4744
+        0.30        |        0.0010         |             0.2291             |        0.9976
+        0.50        |        0.0607         |             0.8732             |        1.0000
+        0.60        |        0.2374         |             0.9882             |        1.0000
+        0.70        |        0.6133         |             0.9998             |        1.0000
+        0.80        |        0.9470         |             1.0000             |        1.0000
+        0.90        |        0.9999         |             1.0000             |        1.0000
+  ----------------------------------------------------------------------------------
+
+[3] PRICING THE HEAD OF PRODUCTION'S RISK ASYMMETRY AS A NUMBER:
+  - Error Mode 1 (False Merge / FP): Merging different notices => Missed deadline => Lawsuit.
+    Assigned Litigation / Business Cost C_FP = $50,000.
+  - Error Mode 2 (False Split / FN): Failing to merge identical copies => Duplicate card => Grumble.
+    Assigned Customer Friction Cost C_FN = $100.
+  - Precise Numerical Asymmetry Ratio:
+      C_FP / C_FN = 50,000 / 100 = 500 : 1.
+
+[4] HOW THE 500:1 RATIO ENTERED SYSTEM SETTINGS:
+  - Decision Rule: We merge iff expected risk of merging < risk of not merging:
+      C_FP * (1 - P(same|s)) < C_FN * P(same|s)
+      P(same|s) >= C_FP / (C_FP + C_FN) = 500 / 501 = 99.80%.
+  - Two-Stage Architecture Implementation:
+    1. Candidate Retrieval Stage: Set b=32, r=4 (Threshold t = 0.42).
+       Tuned for MAXIMUM RECALL (P >= 98.82% at s >= 0.60). Missing a candidate here is an
+       irrecoverable False Negative.
+    2. Exact Verification Stage: Enforce strict exact bigram threshold tau >= 0.55.
+       Empirical performance on 900 labeled pairs:
+         * At tau = 0.40: TP = 261, FP = 91, FN = 18 (Precision = 74.15%) -> UNACCEPTABLE (91 Lawsuits!)
+         * At tau = 0.50: TP = 243, FP =  0, FN = 36 (Precision = 100.00%)
+         * At tau = 0.55: TP = 231, FP =  0, FN = 48 (Precision = 100.00%) -> ZERO LAWSUITS (FP = 0)!
+======================================================================

@@ -1,0 +1,50 @@
+======================================================================
+SETUBID TENDER DEDUPLICATION: SECTION E TERMINAL LOG
+SECTION B, PART E: FIND THE PLACE WHERE THE DESIGN BETRAYS YOU
+======================================================================
+[1] EMPIRICAL DISCOVERY OF SKEW & BOTTLENECK:
+  - Running naive LSH over full 12,000 notices:
+    * Total active LSH buckets: 78,986
+    * Top 10 largest bucket sizes: [3140, 2471, 1863, 1835, 1809, 1805, 1473, 1458, 1437, 1399]
+    * Maximum single bucket size: 3,140 notices!
+    * Candidate pairs generated: 47,612,001 pairs (66% of Cartesian product!).
+  - Portal Breakdown in Top Bucket (3,140 notices):
+    * P094: 391 notices
+    * P001: 259 notices (Nodal)
+    * P002: 254 notices (Nodal)
+    * P005: 253 notices (Nodal)
+    * P006: 165 notices (Nodal)
+    * P003: 160 notices (Nodal)
+
+[2] MECHANICAL EXPLANATION:
+  - Nodal aggregators P001-P006 paste the exact same 1,400-char legal preambles across notices.
+  - Furthermore, standard civil works phrases ('the contractor shall execute', 'units of', 'between chainage')
+    occur across thousands of documents.
+  - Under MinHash, low-hash values chosen from these ubiquitous phrases are shared across thousands of notices.
+  - Across 32 bands, unrelated notices collide with near 100% certainty, causing massive O(M^2) explosions.
+
+[3] QUANTIFYING COST AGAINST 20-MINUTE BUDGET:
+  - Exact pairwise verification throughput: 21,565 pairs/second.
+  - Unmitigated candidate verification time:
+      47,612,001 / 21,565 = 2,207.8 seconds = 36.8 minutes (RUNAWAY EXCEEDING 20-MIN BUDGET!).
+
+[4] MITIGATION: DOCUMENT FREQUENCY (DF) STOP-SHINGLE PRUNING:
+  - We compute corpus-wide document frequency for all 124,606 unique word bigrams.
+  - Shingles appearing in > 10% of notices (708 phrases / 0.57% of vocabulary) are pruned as boilerplate.
+
+[5] MEASURED RESULTS: BEFORE VS AFTER MITIGATION:
+  ---------------------------------------------------------------------------------------------
+  Metric                          | Unmitigated LSH (Raw Text) | Mitigated LSH (DF Pruning > 10%)
+  ---------------------------------------------------------------------------------------------
+  Maximum Bucket Size             | 3,140 notices              | 13 notices (Matches true max cluster = 9!)
+  Top 10 Bucket Sizes             | [3140, 2471, 1863, ...]    | [13, 9, 9, 9, 9, 9, 9, 9, 9, 9]
+  Total Candidate Pairs Generated | 47,612,001 pairs           | 243,287 pairs (14,254 verified)
+  LSH Indexing Wall Time          | 50.52 s                    | 2.54 s
+  Pair Verification Runtime       | 36.8 minutes (KILLED)      | 0.39 seconds
+  Total End-to-End Pipeline Time  | > 37 minutes               | 15.58 seconds (0.26 minutes!)
+  Nightly Budget Headroom         | 0% (Exceeded)              | 98.7% Headroom (Passes 20-min ceiling)
+  Retrieval Recall (True Dupes)   | 83.51% (233/279)           | 89.96% (251/279) (+6.45% Recall Gain!)
+  ---------------------------------------------------------------------------------------------
+  * Price of Mitigation: ZERO retrieval loss! In fact, recall increased by +6.45% because removing
+    misleading boilerplate prevented spurious hash overrides.
+======================================================================
