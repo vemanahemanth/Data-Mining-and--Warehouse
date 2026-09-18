@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: tender_user
+      POSTGRES_PASSWORD: tender_password
+      POSTGRES_DB: tenders
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tender_user -d tenders"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_USER: tender_user
+      DB_PASSWORD: tender_password
+      DB_NAME: tenders
+    volumes:
+      - ./data_2:/exam/data:ro
+    depends_on:
+      db:
+        condition: service_healthy
