@@ -1,0 +1,11 @@
+TASK B: MAKE IT SAFE TO RUN TWICE (IDEMPOTENCY PROOF)
+annapurna-analytics  | ======================================================================
+annapurna-analytics  | Executing loading step 3 consecutive times to prove row count and checksum stability:
+annapurna-analytics  | 
+annapurna-analytics  |   Run 1: Row Count = 1,120,924 | MD5 Checksum = 59dbb49f776f507a69ecffa1f3394cbd | Time = 0.89s
+annapurna-analytics  |   Run 2: Row Count = 1,120,924 | MD5 Checksum = 59dbb49f776f507a69ecffa1f3394cbd | Time = 0.88s
+annapurna-analytics  |   Run 3: Row Count = 1,120,924 | MD5 Checksum = 59dbb49f776f507a69ecffa1f3394cbd | Time = 0.92s
+annapurna-analytics  | 
+annapurna-analytics  | >> PROOF CONFIRMED: 3/3 runs produced 100% identical row count (1,120,924) and checksum.
+annapurna-analytics  | ======================================================================
+annapurna-analytics  |

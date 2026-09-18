@@ -1,0 +1,60 @@
+TASK C: DESIGN AND BUILD TABLES BEHIND THE DASHBOARD
+annapurna-analytics  | ======================================================================
+annapurna-analytics  | [Task C] Attaching PostgreSQL operational database...
+annapurna-analytics  | [Task C] Building Dimension Tables (dim_store, dim_product, dim_category, dim_date)...
+annapurna-analytics  | 
+annapurna-analytics  | [Task C] Constructing fact_sales with business rules:
+annapurna-analytics  |   1. Filter out TAX (GST) and TENDER (bill totals) -> prevents ~2x double-counting
+annapurna-analytics  |   2. Join products on (product_code, valid_from <= date <= valid_to) to resolve surrogate key product_sk
+annapurna-analytics  |   3. Map bill-level discounts (product_code = 'DISC') to product_sk = 0 (Bill Discounts)
+annapurna-analytics  |   4. Compute net revenue contribution: qty * unit_price (negative for discounts/returns, cancelling for voids)
+annapurna-analytics  | 
+annapurna-analytics  | [Task C] fact_sales created: 789,516 revenue rows, Total Net Revenue = ₹522,865,735.75
+annapurna-analytics  | 
+annapurna-analytics  | ----------------------------------------------------------------------
+annapurna-analytics  | DASHBOARD SLICING DEMONSTRATIONS
+annapurna-analytics  | ----------------------------------------------------------------------
+annapurna-analytics  | 
+annapurna-analytics  | 1. Revenue Sliced by Store (Sample):
+annapurna-analytics  | store_id               store_name      city  net_revenue  total_bills
+annapurna-analytics  |      S03        Annapurna T Nagar   Chennai  61864894.46        19695
+annapurna-analytics  |      S10 Annapurna Rajouri Garden New Delhi  59327041.98        18910
+annapurna-analytics  |      S01      Annapurna Jayanagar Bengaluru  56995199.14        18041
+annapurna-analytics  |      S06   Annapurna Andheri West    Mumbai  52584302.70        16708
+annapurna-analytics  |      S02    Annapurna Koramangala Bengaluru  47194947.02        14790
+annapurna-analytics  | 
+annapurna-analytics  | 2. Revenue Sliced by Product Category (Sample):
+annapurna-analytics  |         category_name department  net_revenue  total_units_sold
+annapurna-analytics  |      Staples & Grains       Food  98677244.71            119614
+annapurna-analytics  |             Baby Care   Non-Food  88746237.02            113442
+annapurna-analytics  |           Edible Oils       Food  82736636.78            111533
+annapurna-analytics  |                 Dairy      Fresh  39696588.61            121431
+annapurna-analytics  |         Personal Care   Non-Food  37437446.74             92597
+annapurna-analytics  | Frozen & Ready to Eat      Fresh  29765097.34            114573
+annapurna-analytics  | 
+annapurna-analytics  | 3. Revenue Sliced by Day of the Week:
+annapurna-analytics  | day_of_week_name  net_revenue  total_bills
+annapurna-analytics  |           Sunday  94969205.46        30049
+annapurna-analytics  |           Monday  59589704.80        18821
+annapurna-analytics  |          Tuesday  58523374.95        18429
+annapurna-analytics  |        Wednesday  60808849.66        19342
+annapurna-analytics  |         Thursday  65020714.40        20554
+annapurna-analytics  |           Friday  79012260.21        25190
+annapurna-analytics  |         Saturday 104941626.27        33319
+annapurna-analytics  | 
+annapurna-analytics  | 4. Revenue Sliced by Month:
+annapurna-analytics  | year_month month_name  net_revenue
+annapurna-analytics  |    2024-01    January  38446071.33
+annapurna-analytics  |    2024-02   February  34887085.55
+annapurna-analytics  |    2024-03      March  41971649.09
+annapurna-analytics  |    2024-04      April  37958457.37
+annapurna-analytics  |    2024-05        May  41764716.40
+annapurna-analytics  |    2024-06       June  38987082.82
+annapurna-analytics  |    2024-07       July  40295160.11
+annapurna-analytics  |    2024-08     August  45252181.75
+annapurna-analytics  |    2024-09  September  44615037.46
+annapurna-analytics  |    2024-10    October  56359195.92
+annapurna-analytics  |    2024-11   November  51583838.47
+annapurna-analytics  |    2024-12   December  50745259.48
+annapurna-analytics  | ======================================================================
+annapurna-analytics  |

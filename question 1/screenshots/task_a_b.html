@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Task A & B - Platform Setup and Idempotency Proof</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0d1117;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px;
+    color: #e6edf3;
+    padding: 24px;
+    line-height: 1.6;
+  }
+  .badge {
+    display: inline-block;
+    background: #1f6feb;
+    color: white;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .separator-title {
+    color: #00d4ff;
+    font-weight: bold;
+  }
+  .main-header {
+    color: #00ff88;
+    font-weight: bold;
+  }
+  .success {
+    color: #00ff88;
+    font-weight: bold;
+  }
+  .checksum {
+    color: #ffd700;
+  }
+  .highlight-num {
+    color: #79c0ff;
+  }
+  .prompt {
+    color: #7ee787;
+  }
+  .label {
+    color: #ff9500;
+  }
+  .header-box {
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+  .block {
+    border-left: 3px solid #30363d;
+    padding-left: 14px;
+    margin: 8px 0;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+</style>
+</head>
+<body>
+
+<div class="header-box">
+  <div class="badge">annapurna-analytics</div>
+  <pre><span class="prompt">$</span> docker compose up --build
+
+<span class="main-header">################################################################################
+ANNAPURNA STORES RETAIL ANALYTICS PLATFORM - EXAM VERIFICATION SUITE
+################################################################################</span>
+[Wait] Waiting for PostgreSQL at postgres:5432/annapurna...
+[Wait] <span class="success">PostgreSQL is healthy!</span> (Found <span class="highlight-num">1224</span> products in master catalog)
+[Wait] Waiting for MinIO at http://minio:9000/minio/health/live...
+[Wait] <span class="success">MinIO is healthy and responding at http://minio:9000!</span></pre>
+</div>
+
+<div class="header-box">
+  <pre><span class="separator-title">======================================================================
+TASK A: STAND UP PLATFORM & LAND DATA
+======================================================================</span>
+<span class="label">[Task A]</span> Created S3 bucket: <span class="highlight-num">annapurna-lakehouse</span>
+<span class="label">[Task A]</span> Chosen Organisation: Hive-style partitioning by store_id and year_month:
+  <span class="checksum">s3://annapurna-lakehouse/sales/store_id=&lt;store_id&gt;/year_month=&lt;YYYY-MM&gt;/</span>
+
+<span class="label">Partition Pruning Evidence</span> (Query: Store S01 in October 2024):
+  Single Flat Folder : <span class="highlight-num">4,457 files</span>, <span class="highlight-num">68,706,877 bytes</span> (65.52 MB)
+  Partitioned Layout : <span class="highlight-num">31 files</span>, <span class="highlight-num">846,899 bytes</span> (827.05 KB)
+  Reduction          : <span class="success">99.30% fewer files, 98.77% fewer bytes scanned!</span>
+
+<span class="label">[Task A]</span> Ingesting sales files from /exam/data/sales...
+<span class="success">Successfully staged 1,137,585 raw lines from 4,457 daily files.</span>
+
+<span class="label">[Task A]</span> Writing partitioned Lakehouse Parquet dataset to MinIO S3...
+<span class="success">[Task A] Partitioned lakehouse dataset landed at s3://annapurna-lakehouse/sales</span></pre>
+</div>
+
+<div class="header-box">
+  <pre><span class="separator-title">======================================================================
+TASK B: MAKE IT SAFE TO RUN TWICE (IDEMPOTENCY PROOF)
+======================================================================</span>
+Executing loading step 3 consecutive times to prove row count and checksum stability:
+
+  Run 1: Row Count = <span class="highlight-num">1,120,924</span> | MD5 = <span class="checksum">59dbb49f776f507a69ecffa1f3394cbd</span> | Time = 0.91s
+  Run 2: Row Count = <span class="highlight-num">1,120,924</span> | MD5 = <span class="checksum">59dbb49f776f507a69ecffa1f3394cbd</span> | Time = 0.91s
+  Run 3: Row Count = <span class="highlight-num">1,120,924</span> | MD5 = <span class="checksum">59dbb49f776f507a69ecffa1f3394cbd</span> | Time = 0.90s
+
+<span class="success">&gt;&gt; PROOF CONFIRMED: 3/3 runs produced 100% identical row count (1,120,924) and checksum.</span></pre>
+</div>
+
+</body>
+</html>

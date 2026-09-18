@@ -1,0 +1,46 @@
+TASK F: FINANCIAL RECONCILIATION & VARIANCE ANALYSIS
+annapurna-analytics  | ======================================================================
+annapurna-analytics  | 
+annapurna-analytics  | Full 12-Month Financial Reconciliation Table:
+annapurna-analytics  |   month  pipeline_revenue  revenue_inr  variance_inr  variance_pct   status
+annapurna-analytics  | 2024-01       38446071.33  38446071.33          0.00        0.0000    MATCH
+annapurna-analytics  | 2024-02       34887085.55  34887085.55          0.00        0.0000    MATCH
+annapurna-analytics  | 2024-03       41971649.09  42457899.09    -486250.00       -1.1453 VARIANCE
+annapurna-analytics  | 2024-04       37958457.37  37958457.37          0.00        0.0000    MATCH
+annapurna-analytics  | 2024-05       41764716.40  41764716.40          0.00        0.0000    MATCH
+annapurna-analytics  | 2024-06       38987082.82  38987082.82          0.00        0.0000    MATCH
+annapurna-analytics  | 2024-07       40295160.11  40527291.81    -232131.70       -0.5728 VARIANCE
+annapurna-analytics  | 2024-08       45252181.75  45252181.75          0.00        0.0000    MATCH
+annapurna-analytics  | 2024-09       44615037.46  44615037.46          0.00        0.0000    MATCH
+annapurna-analytics  | 2024-10       56359195.92  56359195.92          0.00        0.0000    MATCH
+annapurna-analytics  | 2024-11       51583838.47  51583838.47          0.00        0.0000    MATCH
+annapurna-analytics  | 2024-12       50745259.48  50745209.00         50.48        0.0001 VARIANCE
+annapurna-analytics  | 
+annapurna-analytics  | ======================================================================
+annapurna-analytics  | ROOT-CAUSE ANALYSIS & FINANCE TEAM ACTION PLAN FOR DIFFERING MONTHS
+annapurna-analytics  | ======================================================================
+annapurna-analytics  | 
+annapurna-analytics  | [2024-03] Variance: ₹-486,250.00
+annapurna-analytics  |   * Cause Category      : A difference in how the two of you define revenue
+annapurna-analytics  |   * Root Cause Details  : Finance signed-off revenue includes an institutional bulk order of exactly ₹486,250.00 that was invoiced manually outside the POS till system. The retail POS folder only contains in-store till receipts. The till data itself is 100% complete and accurate for store sales.
+annapurna-analytics  |   * Action with Finance : Present as 'Revenue Scope Definition'. Inform the Finance Controller that till data accurately captures ₹41,971,649.09 in store transactions. Ask finance to provide an ERP/back-office institutional invoicing feed so non-till institutional sales can be ingested into a dedicated institutional revenue ledger rather than conflating retail till exports with manual invoices.
+annapurna-analytics  | 
+annapurna-analytics  | [2024-07] Variance: ₹-232,131.70
+annapurna-analytics  |   * Cause Category      : Something wrong with the source data
+annapurna-analytics  |   * Root Cause Details  : Hardware outage at Pune store (S07). As documented in billing_notes.md, store S07 lost its till server for three days (July 9, July 10, and July 11, 2024). The exports SALES_S07_20240709, SALES_S07_20240710, and SALES_S07_20240711 were never generated. The missing revenue of ₹232,131.70 was manually phoned in by the store manager directly to finance.
+annapurna-analytics  |   * Action with Finance : Present as 'Source Data Gap (Hardware Failure)'. Demonstrate that the POS folder has a physical gap of 3 store-days for Pune S07. Establish a formal manual-adjustment upload protocol so phoned-in figures are auditable in the data lake with store manager sign-off rather than existing as spreadsheet-only overrides.
+annapurna-analytics  | 
+annapurna-analytics  | [2024-12] Variance: ₹+50.48
+annapurna-analytics  |   * Cause Category      : A difference in how the two of you define revenue
+annapurna-analytics  |   * Root Cause Details  : Rounding policy convention. Finance calculated monthly revenue by rounding each bill total to the nearest integer rupee before aggregating (yielding exactly ₹50,745,209.00). The analytical pipeline sums exact line items with paise precision before rounding (yielding ₹50,745,259.48). The ₹50.48 variance is purely accumulated fractional paise rounding across tens of thousands of bills.
+annapurna-analytics  |   * Action with Finance : Present as 'Rounding Policy Alignment'. Demonstrate that rounding each bill to the rupee yields ₹50,745,209.00 (0.00 variance), while unrounded line summation yields ₹50,745,259.48. Recommend standardizing the accounting policy: define whether official revenue is bill-level rounded or unrounded line-item sum.
+annapurna-analytics  | 
+annapurna-analytics  | ################################################################################
+annapurna-analytics  | ALL TASKS (A THROUGH F) COMPLETED SUCCESSFULLY IN 13.33 SECONDS
+annapurna-analytics  | ################################################################################
+
+[Kannapurna-analytics exited with code 0
+annapurna-postgres   | 2026-09-18 10:05:46.720 UTC [64] LOG:  checkpoint starting: time
+annapurna-postgres   | 2026-09-18 10:05:59.418 UTC [64] LOG:  checkpoint complete: wrote 129 buffers (0.8%); 0 WAL 
+file(s) added, 0 removed, 0 recycled; write=12.659 s, sync=0.010 s, total=12.699 s; sync files=20, longest=0.003 s, 
+average=0.001 s; distance=409 kB, estimate=409 kB; lsn=0/1B465C8, redo lsn=0/1B46590

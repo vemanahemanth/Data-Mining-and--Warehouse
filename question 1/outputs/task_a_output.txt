@@ -1,0 +1,19 @@
+TASK A: STAND UP PLATFORM & LAND DATA
+annapurna-analytics  | ======================================================================
+annapurna-analytics  | [Task A] Created S3 bucket: annapurna-lakehouse
+annapurna-analytics  | Chosen Organisation: Hive-style partitioning by store_id and year_month:
+annapurna-analytics  |   s3://annapurna-lakehouse/sales/store_id=<store_id>/year_month=<YYYY-MM>/
+annapurna-analytics  | 
+annapurna-analytics  | Partition Pruning Evidence (Query: Store S01 in October 2024):
+annapurna-analytics  |   Single Flat Folder: 4,457 files, 68,706,877 bytes (65.52 MB)
+annapurna-analytics  |   Partitioned Layout: 31 files, 846,899 bytes (827.05 KB)
+annapurna-analytics  |   Reduction: 99.30% fewer files, 98.77% fewer bytes scanned!
+annapurna-analytics  | 
+annapurna-analytics  | [Task A] Ingesting sales files from /exam/data/sales...
+annapurna-analytics  | Successfully staged 1,137,585 raw lines from 4,457 daily files.
+annapurna-analytics  | 
+annapurna-analytics  | [Task A] Writing partitioned Lakehouse Parquet dataset to MinIO S3...
+annapurna-analytics  | [Task A] Partitioned lakehouse dataset landed at s3://annapurna-lakehouse/sales
+annapurna-analytics  | 
+annapurna-analytics  | ======================================================================
+annapurna-analytics  |

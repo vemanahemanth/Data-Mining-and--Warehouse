@@ -1,0 +1,6 @@
+data/
+__pycache__/
+*.parquet
+full_exam_output.txt
+.venv/
+push.sh

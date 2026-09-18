@@ -1,0 +1,28 @@
+TASK D: MAKE MARCH USE MARCH'S PRICES (SCD TYPE 2 PRICE REVISIONS)
+annapurna-analytics  | ======================================================================
+annapurna-analytics  | Executing identical query twice (differing ONLY in reporting period):
+annapurna-analytics  | 
+annapurna-analytics  | --- RUN 1: Reporting Period = March 2024 (2024-03-31) ---
+annapurna-analytics  | product_code                product_name     category_name  effective_selling_price  effective_mrp effective_from effective_to reporting_date
+annapurna-analytics  |      P100019       Sunfeast Cookies 150g Biscuits & Snacks                    62.95          70.50     2022-01-01   2024-04-13     2024-03-31
+annapurna-analytics  |      P100049 Britannia Cream Biscuit 60g Biscuits & Snacks                    66.95          74.98     2022-01-01   2024-06-19     2024-03-31
+annapurna-analytics  | 
+annapurna-analytics  | --- RUN 2: Reporting Period = October 2024 (2024-10-31) ---
+annapurna-analytics  | product_code                product_name     category_name  effective_selling_price  effective_mrp effective_from effective_to reporting_date
+annapurna-analytics  |      P100019       Sunfeast Cookies 150g Biscuits & Snacks                    74.65          83.61     2024-09-26   9999-12-31     2024-10-31
+annapurna-analytics  |      P100049 Britannia Cream Biscuit 60g Biscuits & Snacks                    68.93          77.20     2024-08-08   9999-12-31     2024-10-31
+annapurna-analytics  | 
+annapurna-analytics  | Comparison Analysis:
+annapurna-analytics  |   * Sunfeast Cookies 150g (P100019):
+annapurna-analytics  |       March 2024   : Selling Price = ₹62.95 (MRP = ₹70.50)
+annapurna-analytics  |       October 2024 : Selling Price = ₹74.65 (MRP = ₹83.61)
+annapurna-analytics  |       Price Drift  : ₹+11.70 (+18.6%)
+annapurna-analytics  |   * Britannia Cream Biscuit 60g (P100049):
+annapurna-analytics  |       March 2024   : Selling Price = ₹66.95 (MRP = ₹74.98)
+annapurna-analytics  |       October 2024 : Selling Price = ₹68.93 (MRP = ₹77.20)
+annapurna-analytics  |       Price Drift  : ₹+1.98 (+3.0%)
+annapurna-analytics  | 
+annapurna-analytics  | >> VERIFIED: Identical query retrieves historical March prices for March reports
+annapurna-analytics  |    and recent October prices for October reports, satisfying the Category Manager & CFO.
+annapurna-analytics  | ======================================================================
+annapurna-analytics  |

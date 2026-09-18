@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: annapurna-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: annapurna
+      POSTGRES_USER: annapurna
+      POSTGRES_PASSWORD: annapurna
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/masters.sql:/docker-entrypoint-initdb.d/01-masters.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U annapurna -d annapurna"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: annapurna-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  analytics-platform:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: annapurna-analytics
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: annapurna
+      POSTGRES_USER: annapurna
+      POSTGRES_PASSWORD: annapurna
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - ./data:/exam/data:ro
+      - ./data:/app/data:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
